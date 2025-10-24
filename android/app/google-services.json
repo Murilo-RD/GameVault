@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "544877655449",
+    "project_id": "gamevault-steamapimanager",
+    "storage_bucket": "gamevault-steamapimanager.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544877655449:android:902943ec5671ddd60acf08",
+        "android_client_info": {
+          "package_name": "com.example.game_vault"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp_zGa0AIUVqQyawzL1d7jWHVaZy9EE4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
