@@ -12,7 +12,20 @@
           "package_name": "com.example.game_vault"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "544877655449-4pk3f7vhdlb11760288q3at9ham2c4rh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.game_vault",
+            "certificate_hash": "46ac9b795d5f8472cfe6aaf6dc8e022c61b3985d"
+          }
+        },
+        {
+          "client_id": "544877655449-9j6kodk2d8do7uf89b29mnhn0ei7od2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDp_zGa0AIUVqQyawzL1d7jWHVaZy9EE4E"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544877655449-9j6kodk2d8do7uf89b29mnhn0ei7od2l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "544877655449-orrre9tm8ensgdmmaequ7s9sg65tnmdq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gameVault"
+              }
+            }
+          ]
         }
       }
     }
