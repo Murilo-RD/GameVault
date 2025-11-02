@@ -7,16 +7,9 @@ import '../firebase_options.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:game_vault/Util/CampoDeTexto.dart';
 
+import 'Cadastro.dart';
 import 'Home.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MaterialApp(
-    theme: ThemeData.dark(),
-    home: Login(),
-  ));
-}
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -37,9 +30,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    // Definindo as cores aqui para passá-las
-
-
+    _controle.context = context;
     return Scaffold(
       backgroundColor: Color(0xFF1E1E1E),
       body: body(),
@@ -100,7 +91,7 @@ class _LoginState extends State<Login> {
                       ),
                       onPressed: () {
                         setState(() {
-                          _controle.passwordVisible = _controle.passwordVisible;
+                          _controle.passwordVisible = !_controle.passwordVisible;
                         });
                       },
                     ),
@@ -116,8 +107,9 @@ class _LoginState extends State<Login> {
                   ),
                   SizedBox(height: 24.0),
                   Botao(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_controle.formKey.currentState!.validate()) {
+                        await _controle.signIn(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -125,6 +117,7 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         );
+
                       }
                     },
                     child: Text(
@@ -146,13 +139,7 @@ class _LoginState extends State<Login> {
             ),
             Botao(
               onPressed: () async {
-                User? user = await _controle.auth.loginGoogle();
-                if (user != null && context.mounted) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
-                  );
-                }
+                await _controle.authGoogle(context);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -189,6 +176,24 @@ class _LoginState extends State<Login> {
                 ],
               ),
             ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Cadastro()),
+                );
+              },
+              child: Text(
+                'Criar uma conta',
+                style: TextStyle(
+                  color: textColor.withOpacity(0.8),
+                  fontSize: 16,
+                ),
+              )
+            )
           ],
         ),
       ),
