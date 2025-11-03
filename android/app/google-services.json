@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "544877655449-4pk3f7vhdlb11760288q3at9ham2c4rh.apps.googleusercontent.com",
+          "client_id": "544877655449-hrdb692roek2dl0aaqhnk4t4tbptujdq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.game_vault",
-            "certificate_hash": "46ac9b795d5f8472cfe6aaf6dc8e022c61b3985d"
+            "certificate_hash": "6bdc9ebd79ff8a72916164e2750a3c42992fae47"
           }
         },
         {
