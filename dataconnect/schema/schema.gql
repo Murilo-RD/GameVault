@@ -1,0 +1,60 @@
+type User @table {
+  steamId: String!
+  displayName: String!
+  createdAt: Timestamp!
+  avatarUrl: String
+  steamProfileUrl: String
+  apiKey: String
+}
+
+type Game @table {
+  appId: Int!
+  title: String!
+  createdAt: Timestamp!
+  genre: String
+  developer: String
+  publisher: String
+  releaseDate: Date
+  imageUrl: String
+}
+
+type UserGame @table(key: ["user", "game"]) {
+  user: User!
+  game: Game!
+  playtimeForever: Int!
+  createdAt: Timestamp!
+  lastPlayed: Timestamp
+  favorite: Boolean
+  customNotes: String
+}
+
+type Achievement @table {
+  game: Game
+  apiName: String!
+  displayName: String!
+  description: String!
+  globalAchievedPercentage: Float!
+  iconUrl: String
+  hidden: Boolean
+}
+
+type UserAchievement @table(key: ["user", "achievement"]) {
+  user: User!
+  achievement: Achievement!
+  achieved: Boolean!
+  achievedAt: Timestamp
+}
+
+type GameCollection @table {
+  user: User
+  name: String!
+  createdAt: Timestamp!
+  description: String
+}
+
+type CollectionGame @table(key: ["collection", "game"]) {
+  collection: GameCollection!
+  game: Game!
+  addedAt: Timestamp!
+  notes: String
+}

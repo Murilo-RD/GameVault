@@ -1,0 +1,60 @@
+mutation CreateDemoData @transaction @auth(level: PUBLIC, insecureReason: "This mutation is used to seed data and does not require authentication") {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      displayName: "demouser1",
+      steamId: "76561197960435530",
+      createdAt: "2024-04-26T12:00:00Z",
+      steamProfileUrl: "https://steamcommunity.com/profiles/76561197960435530",
+      avatarUrl: "https://avatars.akamai.steamstatic.com/0ef53464c92f9d9746b8654e78799707652553a9.jpg"
+    },
+    {
+      id: "660e8400-e29b-41d4-a716-446655440001",
+      displayName: "demouser2",
+      steamId: "76561197960435531",
+      createdAt: "2024-04-27T12:00:00Z",
+      steamProfileUrl: "https://steamcommunity.com/profiles/76561197960435531",
+      avatarUrl: "https://avatars.akamai.steamstatic.com/0ef53464c92f9d9746b8654e78799707652553a9.jpg"
+    }
+  ])
+  game_insertMany(data: [
+    {
+      id: "770e8400-e29b-41d4-a716-446655440002",
+      appId: 400,
+      title: "Portal",
+      createdAt: "2024-04-28T12:00:00Z",
+      developer: "Valve",
+      genre: "Puzzle",
+      imageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/400/header.jpg",
+      publisher: "Valve",
+      releaseDate: "2007-10-09"
+    },
+    {
+      id: "880e8400-e29b-41d4-a716-446655440003",
+      appId: 620,
+      title: "Portal 2",
+      createdAt: "2024-04-29T12:00:00Z",
+      developer: "Valve",
+      genre: "Puzzle",
+      imageUrl: "https://cdn.akamai.steamstatic.com/steam/apps/620/header.jpg",
+      publisher: "Valve",
+      releaseDate: "2011-04-18"
+    }
+  ])
+  userGame_insertMany(data: [
+    {
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      gameId: "770e8400-e29b-41d4-a716-446655440002",
+      createdAt: "2024-04-30T12:00:00Z",
+      playtimeForever: 120,
+      favorite: true
+    },
+    {
+      userId: "660e8400-e29b-41d4-a716-446655440001",
+      gameId: "880e8400-e29b-41d4-a716-446655440003",
+      createdAt: "2024-05-01T12:00:00Z",
+      playtimeForever: 240,
+      favorite: false
+    }
+  ])
+}

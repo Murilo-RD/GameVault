@@ -1,0 +1,41 @@
+mutation AddGameToCollection($collectionId: UUID!, $gameId: UUID!, $addedAt: Timestamp!, $notes: String) @auth(level: USER) {
+  collectionGame_insert(data: {
+    collectionId: $collectionId,
+    gameId: $gameId,
+    addedAt: $addedAt,
+    notes: $notes
+  })
+}
+
+query GetUserGames($userId: UUID!) @auth(level: USER) {
+  userGames(where: {userId: {eq: $userId}}) {
+    game {
+      id
+      title
+      imageUrl
+    }
+    customNotes
+    favorite
+    lastPlayed
+    playtimeForever
+  }
+}
+
+mutation UpdateGameNotes($userId: UUID!, $gameId: UUID!, $customNotes: String) @auth(level: USER) {
+  userGame_update(
+    key: {userId: $userId, gameId: $gameId}
+    data: {customNotes: $customNotes}
+  )
+}
+
+query ListGames @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  games {
+    id
+    title
+    imageUrl
+    developer
+    publisher
+    releaseDate
+    genre
+  }
+}

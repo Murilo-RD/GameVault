@@ -1,11 +1,11 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../Service/AuthEmail.dart';
-import '../../Service/AuthService.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:game_vault/Service/AuthSteam.dart';
 import '../Home.dart';
 
 class CILogin{
@@ -13,10 +13,14 @@ class CILogin{
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _passwordVisible = false;
-  final _auth = AuthService();
-  final _authEmail = AuthEmail();
+  final String _URL = "https://us-central1-gamevault-steamapimanager.cloudfunctions.net/steamLoginCallback";
+  late final _authSteam;
   late BuildContext _context;
 
+
+  CILogin(){
+    _authSteam = AuthSteam(cloudFunctionUrl: _URL);
+  }
 
   set context(BuildContext value) {
     _context = value;
@@ -44,63 +48,22 @@ class CILogin{
   bool get passwordVisible => _passwordVisible;
 
 
-  Future<void> signIn(BuildContext context) async {
-    final email = emailController.text.trim();
-    final senha = passwordController.text.trim();
+  Future<void> loginSteam()async {
 
-    if (email.isEmpty || senha.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Preencha e-mail e senha')),
-      );
-      return;
-    }
+    // 3. Chame o método de login
+    print("Iniciando login Steam...");
+    final User? user = await _authSteam.login(_context);
 
-    try {
-      final user = await _authEmail.loginUsuario(email: email, senha: senha);
-
-      if (user == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Usuário não encontrado')),
-        );
-        return;
-      }
-
-      if (!user.emailVerified) {
-        await user.sendEmailVerification();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Verifique seu e-mail (cheque a caixa de entrada)')),
-        );
-        return;
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login realizado com sucesso!')),
-      );
-
+    if (user != null) {
+      print("Login com Steam bem-sucedido!");
+      print("ID do Usuário (SteamID): ${user.uid}");
       Navigator.pushReplacement(
-        context,
+        _context,
         MaterialPageRoute(builder: (_) => Home()),
       );
-
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? 'Erro ao logar')),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ocorreu um erro inesperado')),
-      );
+    } else {
+      print("Login com Steam foi cancelado ou falhou.");
     }
-  }
-  authGoogle(BuildContext context) async {
-      User? user = await _auth.loginGoogle();
-      if (user != null && context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Home()),
-        );
-      }
-
   }
 
 }
