@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:game_vault/Telas/ControleIteracao/CILogin.dart';
 import 'package:game_vault/Util/Botao.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'ControleIteracao/CILogin.dart';
 
 
 
@@ -15,12 +16,6 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
 
   CILogin _controle = CILogin();
-
-  @override
-  void dispose() {
-    _controle.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +43,10 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
-
             SizedBox(height: 10),
             Botao(
               onPressed: () {
-                _controle.loginSteam();
+                _controle.loginSteam(context);
               }
               ,
               child: Row(

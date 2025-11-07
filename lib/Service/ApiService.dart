@@ -6,33 +6,35 @@ class ApiService {
   final String _baseUrl;
   final http.Client _client;
 
-  // Headers padrão (ex: autenticação, se necessário)
-  final Map<String, String> _defaultHeaders = {
-    'Content-Type': 'application/json; charset=UTF-8',
-    'Accept': 'application/json',
-    // Ex: 'Authorization': 'Bearer SEU_TOKEN_AQUI'
-  };
-
-  /// Construtor: Requer uma [baseUrl] para a API.
-  /// Opcionalmente, pode receber um [httpClient] para testes.
+  /// Construtor: base URL obrigatória, client opcional
   ApiService({required String baseUrl, http.Client? httpClient})
       : _baseUrl = baseUrl,
         _client = httpClient ?? http.Client();
 
-  /// Método genérico para processar e tratar a resposta HTTP.
-  dynamic _handleResponse(http.Response response) {
-    // Decodifica o corpo da resposta se não estiver vazio.
-    final dynamic body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+  /// Constrói a URL completa
+  Uri _buildUri(String endpoint) {
+    return Uri.parse('$_baseUrl$endpoint');
+  }
+
+  /// Método genérico para processar a resposta HTTP
+  Map<String, dynamic> _handleResponse(http.Response response) {
+    if (response.body.isEmpty) {
+      throw ApiException(message: 'Resposta vazia da API');
+    }
+
+    final body = jsonDecode(response.body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      // Sucesso
-      return body;
+      if (body is Map<String, dynamic>) {
+        return body;
+      } else {
+        // Força que sempre seja um Map
+        return {'data': body};
+      }
     } else {
-      // Erro
-      final String errorMessage = (body != null && body['message'] != null)
+      final errorMessage = (body is Map && body['message'] != null)
           ? body['message']
           : 'Erro desconhecido';
-
       throw ApiException(
         statusCode: response.statusCode,
         message: 'Falha na requisição: $errorMessage (Status: ${response.statusCode})',
@@ -40,43 +42,23 @@ class ApiService {
     }
   }
 
-  /// Constrói a URL completa e os headers para a requisição.
-  Uri _buildUri(String endpoint) {
-    return Uri.parse('$_baseUrl$endpoint');
-  }
-
-  Map<String, String> _getHeaders({Map<String, String>? extraHeaders}) {
-    final headers = {..._defaultHeaders};
-    if (extraHeaders != null) {
-      headers.addAll(extraHeaders);
-    }
-    return headers;
-  }
-
-  // --- Método GET ---
-
-  /// Realiza uma requisição GET.
-  /// Retorna o corpo da resposta decodificado (geralmente Map ou List).
-  Future<dynamic> get(String endpoint, {Map<String, String>? headers}) async {
+  /// Requisição GET sem headers retornando Map<String, dynamic>
+  Future<Map<String, dynamic>> get(String endpoint) async {
     try {
-      final response = await _client.get(
-        _buildUri(endpoint),
-        headers: _getHeaders(extraHeaders: headers),
-      );
+      final response = await _client.get(_buildUri(endpoint));
       return _handleResponse(response);
     } on SocketException {
       throw ApiException(message: 'Sem conexão com a internet.');
     } on http.ClientException catch (e) {
       throw ApiException(message: 'Erro de conexão: ${e.message}');
     } catch (e) {
-      // Re-lança a exceção se já for uma ApiException
       if (e is ApiException) rethrow;
       throw ApiException(message: 'Erro inesperado: $e');
     }
   }
 }
 
-/// Exceção personalizada para erros da API.
+/// Exceção personalizada da API
 class ApiException implements Exception {
   final String message;
   final int? statusCode;
@@ -84,7 +66,6 @@ class ApiException implements Exception {
   ApiException({required this.message, this.statusCode});
 
   @override
-  String toString() {
-    return 'ApiException: $message${statusCode != null ? ' (Status: $statusCode)' : ''}';
-  }
+  String toString() =>
+      'ApiException: $message${statusCode != null ? ' (Status: $statusCode)' : ''}';
 }
