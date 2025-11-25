@@ -42,6 +42,7 @@ class ApiService {
     }
   }
 
+
   /// Requisição GET sem headers retornando Map<String, dynamic>
   Future<Map<String, dynamic>> get(String endpoint) async {
     try {

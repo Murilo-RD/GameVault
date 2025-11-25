@@ -21,14 +21,14 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     _controle.context = context;
     return Scaffold(
-      backgroundColor: Color(0xFF1E1E1E),
+      backgroundColor: Color(0xFF1A1920),
       body: body(),
     );
   }
 
   body(){
     final Color textColor = Color(0xFFE0E0E0);
-    final Color buttonBgColor = Color(0xFF2A2A2A);
+    final Color buttonBgColor = Color(0xFF28292E);
 
     return SingleChildScrollView(
       child: Padding(

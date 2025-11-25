@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:game_vault/Controller/ListaPromocao.dart';
 import 'package:game_vault/Controller/SteamApiController.dart';
+import 'package:game_vault/Tela/TelaPrincipal.dart';
 
 import 'Home.dart';
 import 'Login.dart';
@@ -30,12 +33,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (user != null) {
       SteamApiController.usuario = user;
-      // Usuário JÁ ESTÁ LOGADO
-      print("Usuário já logado: ${user.uid}");
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => Home()), // Vai para a Home
-      );
+      SteamApiController.getUserData().then((dados){
+        SteamApiController.atualizarNomeUsuario(user.uid, dados['response']['players'][0]['personaname']);
+        FirebaseFirestore.instance.collection("users").doc(user.uid).get().then((data){
+          SteamApiController.userData = data.data();
+          print("Usuário já logado: ${user.uid}");
+          ListaPromocao.getWishlistPromotionsBrl();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => TelaPrincipal()), // Vai para a Home
+          );
+        });
+      });
+
     } else {
       // Ninguém logado
       print("Nenhum usuário logado.");
@@ -50,18 +60,12 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     // Uma tela de carregamento simples
     return Scaffold(
-      backgroundColor: Color(0xFF1E1E1E), // Cor de fundo do seu app
+      backgroundColor: Color(0xFF1A1920), // Cor de fundo do seu app
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(color: Colors.white),
-            SizedBox(height: 20),
-            Text(
-              'Carregando...',
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            )
-          ],
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage('assets/images/imageLogin.png'))
+          ),
         ),
       ),
     );

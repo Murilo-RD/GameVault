@@ -9,6 +9,7 @@ import 'package:game_vault/Controller/SteamApiController.dart';
 import 'package:game_vault/Service/AuthSteam.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Home.dart';
+import '../TelaPrincipal.dart';
 
 class CILogin{
   final String _URL = "https://us-central1-gamevault-steamapimanager.cloudfunctions.net/steamLoginCallback";
@@ -38,9 +39,6 @@ class CILogin{
     final User? user = await _authSteam.login(context);
 
     if (user != null) {
-      print("Login com Steam bem-sucedido!");
-      print("ID do Usuário (SteamID): ${user.uid}");
-      SteamApiController.usuario = user;
 
       // --- INÍCIO DA ADIÇÃO: SALVANDO NO SHARED PREFERENCES ---
       try {
@@ -58,10 +56,18 @@ class CILogin{
       }
       // --- FIM DA ADIÇÃO ---
 
-      Navigator.pushReplacement(
-        _context,
-        MaterialPageRoute(builder: (_) => Home()),
-      );
+      SteamApiController.usuario = user;
+      SteamApiController.getUserData().then((dados){
+        SteamApiController.atualizarNomeUsuario(user.uid, dados['response']['players'][0]['personaname']);
+        FirebaseFirestore.instance.collection("users").doc(user.uid).get().then((data){
+          SteamApiController.userData = data.data();
+          print("Usuário já logado: ${user.uid}");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => TelaPrincipal()), // Vai para a Home
+          );
+        });
+      });
     } else {
       print("Login com Steam foi cancelado ou falhou.");
       _showMsg(_context, "Login cancelado ou falhou"); // Use o _showMsg corrigido da outra thread
