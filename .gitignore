@@ -14,7 +14,6 @@ migrate_working_dir/
 .env
 /functions/
 functions/
-lib/firebase_options.dart
 # IntelliJ related
 *.iml
 *.ipr
@@ -35,6 +34,7 @@ lib/firebase_options.dart
 .pub-cache/
 .pub/
 /build/
+/lib/firebase_options.dart
 
 # Symbolication related
 app.*.symbols
